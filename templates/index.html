@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анкета пользователя</title>
+    <!-- Подключаем Bootstrap для оформления -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+<!--            background-image: url("{{ url_for('static', filename='img/background.jpg') }}");-->
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, lightblue, lightgreen);
+            font-family: Arial, sans-serif;
+            type: bold;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Полупрозрачный фон для контейнера */
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Анкета пользователя</h1>
+
+        <!-- Флеш-сообщения -->
+        {% with messages = get_flashed_messages(with_categories=True) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- Форма для ввода данных -->
+        <form method="POST" class="mt-4">
+            <div class="form-group">
+                <label for="name">Имя:</label>
+                <input type="text" id="name" name="name" class="form-control" value="{{ request.form.get('name', '') }}">
+            </div>
+
+            <div class="form-group">
+                <label for="city">Город:</label>
+                <input type="text" id="city" name="city" class="form-control" value="{{ request.form.get('city', '') }}">
+            </div>
+
+            <div class="form-group">
+                <label for="hobby">Хобби:</label>
+                <input type="text" id="hobby" name="hobby" class="form-control" value="{{ request.form.get('hobby', '') }}">
+            </div>
+
+            <div class="form-group">
+                <label for="age">Возраст:</label>
+                <input type="text" id="age" name="age" class="form-control" value="{{ request.form.get('age', '') }}">
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-mail:</label>
+                <input type="text" id="email" name="email" class="form-control" value="{{ request.form.get('email', '') }}">
+            </div>
+
+            <button type="submit" class="btn btn-primary" name="add_user">Отправить</button>
+        </form>
+
+        <h2 class="mt-5">Проверка на дубли</h2>
+        <form method="POST" action="{{ url_for('check_duplicates') }}" class="mt-4">
+            <button type="submit" class="btn btn-secondary">Проверить дубли</button>
+
+        <!-- Вывод списка пользователей -->
+        {% if users %}
+        <div class="mt-5">
+            <h2>Список пользователей</h2>
+            <ul class="list-group">
+                {% for user in users %}
+                <li class="list-group-item">
+                    <strong>{{ user.name }}</strong>, {{ user.age }} лет, из города {{ user.city }}. Хобби: {{ user.hobby }}. E-mail: {{ user.email }}.
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <p>Нет данных о пользователях.</p>
+        {% endif %}
+        </div>
+
+    <!-- Подключаем Bootstrap JS и jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
